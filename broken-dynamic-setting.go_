@@ -47,7 +47,6 @@ func onReady() {
 				select { 
 				case<-menuItenPtr.ClickedCh:
 					execute(commands[i])
-					break
 				}
 			}	
 			// select {
