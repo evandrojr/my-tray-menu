@@ -4,16 +4,19 @@ Delivers a simple to setup-up tray menu.
 
 ![alt text](screenshots/screen1.png "my-tray-menu")
 
-## For now use branch "hardcoded" branch main does not work yet.
+## Bug
+
+I was unable to create channels dynamically, yet. It is necessary to edit main.go to add menu options.
 
 ## Dead simple configuration
 
 Sample my-tray-meny.yaml:
 
 ```
-Turn off screen: /bin/sh ./scripts/turn-off-screen.sh
+Turn off screen: /bin/sh /home/j/lab/my-tray-menu/scripts/turn-off-screen.sh
+Toggle microphone: /bin/sh /home/j/lab/my-tray-menu/scripts/toggle-microphone.sh
 Kill process (xkill): xkill
-Exit: killall my-tray-menu
+Shutdown: sudo shutdown -n now
 ```
 
 ## Requirements
