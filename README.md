@@ -1,10 +1,10 @@
 # my-tray-menu
 
-Deliver a simple to setup-up tray menu.
+Delivers a simple to setup-up tray menu.
 
 ![alt text](screenshots/screen1.png "my-tray-menu")
 
-## Super simple configuration
+## Dead simple configuration
 
 Sample my-tray-meny.yaml:
 
