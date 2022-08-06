@@ -1,6 +1,6 @@
 # my-tray-menu
 
-Delivers a simple to setup-up tray menu.
+Delivers quick set up tray menu.
 
 ![alt text](media/screen1.png "my-tray-menu")
 
