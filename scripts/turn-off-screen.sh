@@ -1,1 +1,1 @@
-sleep 1; xset -display $DISPLAY dpms force off; read temp; xset -display $DISPLAY dpms force on
+sleep 1 && xset -display :0.0 dpms force off 
