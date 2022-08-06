@@ -18,7 +18,7 @@ Exit: killall my-tray-menu
 
 - Go 1.9
 
-## Dependencies set-up
+## Dependencies' set-up
 
 Follow instructions for specific OS dependencies at:
 
