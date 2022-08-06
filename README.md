@@ -4,6 +4,8 @@ Delivers a simple to setup-up tray menu.
 
 ![alt text](screenshots/screen1.png "my-tray-menu")
 
+## For now use branch "hardcoded" branch main does not work yet.
+
 ## Dead simple configuration
 
 Sample my-tray-meny.yaml:
