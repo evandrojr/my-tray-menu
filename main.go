@@ -22,8 +22,6 @@ func main() {
 	systray.Run(onReady, onExit)
 }
 
-
-
 func onReady() {
 	systray.SetIcon(getIcon("assets/clock.ico"))
 	menuItensPtr = make([]*systray.MenuItem,0)
@@ -35,61 +33,22 @@ func onReady() {
    }
    systray.AddSeparator()
 	// mQuit := systray.AddMenuItem("Quit", "Quits this app")
-
 	go func() {
 		for {
-			systray.SetTitle("My menu")
-			systray.SetTooltip("My menu")
+			systray.SetTitle("My tray menu")
+			systray.SetTooltip("https://github.com/evandrojr/my-tray-menu")
 			time.Sleep(1 * time.Second)
 		}
 	}()
 
 	go func() {
-
-		// chans = make()
-		// for  menuItenPtr := range menuItensPtr {
-		
-		// }
-
-		// agg := make(chan string)
-
-		// for _, ch := range menuItensPtr.Channels {
-		//   go func(c chan string) {
-		// 	for msg := range c {
-		// 	  agg <- msg
-		// 	}
-		//   }(ch)
-		// }
-
-		tick := time.After(200 * time.Millisecond)
-	
-
 		for{
-
-			// fmt.Printf("Loop")
 			for i, menuItenPtr := range menuItensPtr {
-
-				// fmt.Printf("Loop menu %d", i)
 				select { 
-				
-				case <-tick:
-					fmt.Println("tick.")
-
-					
 				case<-menuItenPtr.ClickedCh:
 					execute(commands[i])
 					break
-				
-						
-				// default:
-					
 				}
-
-				time.Sleep(1 * time.Millisecond)
-				// fmt.Printf("Name: %s Age: %d\n", dog.Name, dog.Age)
-				// fmt.Printf("Addr: %p\n", &dog)
-		
-				// fmt.Println("")
 			}	
 			// select {
 			// case <-mQuit.ClickedCh:
@@ -97,14 +56,12 @@ func onReady() {
 			// 	return
 			// // default:
 			// }
-	
 		}
-
 	}()
 }
 
 func onExit() {
-	// Cleaning stuff here.
+	// Cleaning stuff will go here. 
 }
 
 func getIcon(s string) []byte {
@@ -116,49 +73,31 @@ func getIcon(s string) []byte {
 }
 
 func execute(commands string){
-	// args := []string{"what", "ever", "you", "like"}
-	
 	command_array:= strings.Split(commands, " ")
 	command:="" 
 	command, command_array = command_array[0], command_array[1:]
 	cmd := exec.Command(command, command_array ...)
-	
-	// fmt.Printf("Output %q\n", x)
-
     var out bytes.Buffer
     cmd.Stdout = &out
-
     err := cmd.Run()
-
     if err != nil {
         log.Fatal(err)
     }
-
-    fmt.Printf("Output %q\n", out.String())
+    fmt.Printf("Output %s\n", out.String())
 }
 
 func readconfig()  map[string]string{
-	yfile, err := ioutil.ReadFile("my-menu.yaml")
-
+	yfile, err := ioutil.ReadFile("my-tray-menu.yaml")
 	if err != nil {
-
 		 log.Fatal(err)
 	}
-
 	data := make(map[string]string)
-
 	err2 := yaml.Unmarshal(yfile, &data)
-
 	if err2 != nil {
-
 		 log.Fatal(err2)
 	}
-
 	for k, v := range data {
-
 		 fmt.Printf("%s -> %s\n", k, v)
-		//  fmt.Printf( k, string(v))
-		 
 	}
 	return data
 }
