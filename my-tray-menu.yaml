@@ -1,0 +1,3 @@
+ls: ls -la
+du: du -h
+whoami: whoami
