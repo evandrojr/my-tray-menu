@@ -2,7 +2,7 @@
 
 Delivers a simple to setup-up tray menu.
 
-![alt text](screenshots/screen1.png "my-tray-menu")
+![alt text](media/screen1.png "my-tray-menu")
 
 ## Bug
 
