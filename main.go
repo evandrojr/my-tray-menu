@@ -38,6 +38,8 @@ func onReady() {
 	i++
 	op2 := systray.AddMenuItem(labels[i], commands[i])
 	i++
+	op3 := systray.AddMenuItem(labels[i], commands[i])
+	i++
 
 	systray.AddSeparator()
 	mQuit := systray.AddMenuItem("Quit", "Quits this app")
@@ -58,6 +60,8 @@ func onReady() {
 				execute(commands[1])
 			case <-op2.ClickedCh:
 				execute(commands[2])
+			case <-op3.ClickedCh:
+				execute(commands[3])
 			case <-mQuit.ClickedCh:
 				systray.Quit()
 				return
@@ -105,12 +109,7 @@ func execute(commands string) {
 }
 
 func readconfig() map[string]string {
-
-
-
-	path:= filepath.Join(programPath,"my-tray-menu.yaml")
-
-	yfile, err := ioutil.ReadFile(path)
+	yfile, err := ioutil.ReadFile(filepath.Join(programPath,"my-tray-menu.yaml"))
 	if err != nil {
 		log.Fatal(err)
 	}
