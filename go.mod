@@ -1,4 +1,4 @@
-module my-menu
+module my-tray-menu
 
 go 1.19
 
