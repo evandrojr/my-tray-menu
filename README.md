@@ -34,4 +34,4 @@ go build
 ## References:
 
 1. https://github.com/Osuka42g/simple-clock-systray
-2. https://github.com/getlantern/systray
+1. https://github.com/getlantern/systray
