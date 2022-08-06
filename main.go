@@ -5,7 +5,9 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -17,15 +19,17 @@ var menuItensPtr []*systray.MenuItem
 var config map[string]string
 var commands []string
 var labels []string
+var programPath string
 
 func main() {
+	setProgramPath()
 	config = readconfig()
 	time.Sleep(1 * time.Second)
 	systray.Run(onReady, onExit)
 }
 
 func onReady() {
-	systray.SetIcon(getIcon("assets/menu.ico"))
+	systray.SetIcon(getIcon(filepath.Join(programPath,"assets/menu.ico")))
 	menuItensPtr = make([]*systray.MenuItem, 0)
 	i := 0
 	op0 := systray.AddMenuItem(labels[i], commands[i])
@@ -74,6 +78,18 @@ func getIcon(s string) []byte {
 	return b
 }
 
+func setProgramPath(){
+	ex, err := os.Executable()
+    if err != nil {
+        panic(err)
+    }
+    programPath = filepath.Dir(ex)
+    if err != nil {
+        fmt.Println(err)
+        os.Exit(1)
+    }
+}
+
 func execute(commands string) {
 	command_array := strings.Split(commands, " ")
 	command := ""
@@ -89,7 +105,12 @@ func execute(commands string) {
 }
 
 func readconfig() map[string]string {
-	yfile, err := ioutil.ReadFile("my-tray-menu.yaml")
+
+
+
+	path:= filepath.Join(programPath,"my-tray-menu.yaml")
+
+	yfile, err := ioutil.ReadFile(path)
 	if err != nil {
 		log.Fatal(err)
 	}
