@@ -1,6 +1,18 @@
 # my-tray-menu
 
-Deliver a simple to setup-up tray menu,
+Deliver a simple to setup-up tray menu.
+
+![alt text](screenshots/screen1.png "my-tray-menu")
+
+## Super simple configuration
+
+Sample my-tray-meny.yaml:
+
+```
+Turn off screen: /bin/sh ./scripts/turn-off-screen.sh
+Kill process (xkill): xkill
+Exit: killall my-tray-menu
+```
 
 ## Requirements
 
