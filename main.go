@@ -23,7 +23,7 @@ func main() {
 }
 
 func onReady() {
-	systray.SetIcon(getIcon("assets/clock.ico"))
+	systray.SetIcon(getIcon("assets/menu.ico"))
 	menuItensPtr = make([]*systray.MenuItem,0)
 	commands = make([]string,0)
 	for k, v := range config {
@@ -83,7 +83,7 @@ func execute(commands string){
     if err != nil {
         log.Fatal(err)
     }
-    fmt.Printf("Output %s\n", out.String())
+    // fmt.Printf("Output %s\n", out.String())
 }
 
 func readconfig()  map[string]string{
