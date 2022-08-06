@@ -1,3 +1,4 @@
-Turn off screen: /bin/sh ./scripts/turn-off-screen.sh
+Turn off screen: /bin/sh /home/j/lab/my-tray-menu/scripts/turn-off-screen.sh
+Toggle microphone: /bin/sh /home/j/lab/my-tray-menu/scripts/toggle-microphone.sh
 Kill process (xkill): xkill
-Exit: killall my-tray-menu
+Shutdown: sudo shutdown -n now
