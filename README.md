@@ -11,10 +11,13 @@ Delivers an easy set up tray menu.
 Sample my-tray-meny.yaml:
 
 ```
+Netflix: google-chrome https://netflix.com
+Prime video: google-chrome https://www.primevideo.com/
 Turn off screen: /bin/sh /home/j/lab/my-tray-menu/scripts/turn-off-screen.sh
-Toggle microphone: /bin/sh /home/j/lab/my-tray-menu/scripts/toggle-microphone.sh
-Kill process (xkill): xkill
-Shutdown: sudo shutdown -n now
+Toggle mic: /bin/sh /home/j/lab/my-tray-menu/scripts/toggle-microphone.sh
+Toggle speakers: pactl set-sink-mute @DEFAULT_SINK@ toggle
+Kill process: xkill
+Shutdown: sudo shutdown -P now
 ```
 
 ## Requirements
