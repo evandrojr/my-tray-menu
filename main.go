@@ -21,7 +21,6 @@ var commands []string
 var labels []string
 var programPath string
 
-
 func main() {
 	setProgramPath()
 	config = readconfig()
@@ -32,7 +31,7 @@ func main() {
 func onReady() {
 	systray.SetIcon(getIcon(filepath.Join(programPath, "assets/menu.ico")))
 	menuItensPtr = make([]*systray.MenuItem, 0)
-	
+
 	for k := range config {
 		menuItemPtr := systray.AddMenuItem(k, k)
 		menuItensPtr = append(menuItensPtr, menuItemPtr)
@@ -45,7 +44,7 @@ func onReady() {
 	for i, menuItenPtr := range menuItensPtr {
 		go func(c chan struct{}, cmd string) {
 			for range c {
-				cmdChan <- cmd
+				execute(cmd)
 			}
 		}(menuItenPtr.ClickedCh, commands[i])
 	}
