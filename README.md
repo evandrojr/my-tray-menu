@@ -48,5 +48,6 @@ go build
 
 ## References:
 
+1. https://stackoverflow.com/questions/73261794/unable-to-loop-through-golang-dynamic-channels
 1. https://github.com/Osuka42g/simple-clock-systray
 1. https://github.com/getlantern/systray
