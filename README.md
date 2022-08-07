@@ -6,10 +6,6 @@ Delivers an easy set up tray menu.
 
 [demo.webm](https://user-images.githubusercontent.com/939608/183258199-f92279f0-3a65-4c05-910b-db7bea126766.webm)
 
-## Bug
-
-I was unable to create channels dynamically, yet. It is necessary to edit main.go to add menu options.
-
 ## Dead simple configuration
 
 Sample my-tray-meny.yaml:
