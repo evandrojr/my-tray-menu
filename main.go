@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"bytes"
 	"fmt"
 	"io/ioutil"
@@ -12,18 +13,20 @@ import (
 	"time"
 
 	"github.com/getlantern/systray"
-	"gopkg.in/yaml.v3"
 )
 
 var menuItensPtr []*systray.MenuItem
-var config map[string]string
-var commands []string
-var labels []string
+var options []Option
 var programPath string
+
+type Option struct{
+	label string
+	command string
+}
 
 func main() {
 	setProgramPath()
-	config = readconfig()
+	options = loadConfig(filepath.Join(programPath, "my-tray-menu.yaml"))
 	time.Sleep(1 * time.Second)
 	systray.Run(onReady, onExit)
 }
@@ -32,8 +35,8 @@ func onReady() {
 	systray.SetIcon(getIcon(filepath.Join(programPath, "assets/menu.ico")))
 	menuItensPtr = make([]*systray.MenuItem, 0)
 
-	for k := range config {
-		menuItemPtr := systray.AddMenuItem(k, k)
+	for _,v:= range options {
+		menuItemPtr := systray.AddMenuItem(v.label, v.label)
 		menuItensPtr = append(menuItensPtr, menuItemPtr)
 	}
 	systray.AddSeparator()
@@ -46,7 +49,7 @@ func onReady() {
 			for range c {
 				execute(cmd)
 			}
-		}(menuItenPtr.ClickedCh, commands[i])
+		}(menuItenPtr.ClickedCh, options[i].command)
 	}
 
 	go func() {
@@ -98,26 +101,44 @@ func execute(commands string) {
 	fmt.Printf("Output %s\n", out.String())
 }
 
-func readconfig() map[string]string {
-	yfile, err := ioutil.ReadFile(filepath.Join(programPath, "my-tray-menu.yaml"))
-	if err != nil {
-		log.Fatal(err)
-	}
 
-	data := make(map[string]string)
-	err2 := yaml.Unmarshal(yfile, &data)
-	if err2 != nil {
-		log.Fatal(err2)
-	}
 
-	labels = make([]string, 0)
-	commands = make([]string, 0)
+func loadConfig(path string) [] Option{
+// func LoadConfig(path string) {
 
-	for k, v := range data {
-		labels = append(labels, k)
-		commands = append(commands, v)
-		fmt.Printf("%s -> %s\n", k, v)
-	}
-	fmt.Print(len(labels))
-	return data
+	file, err := os.Open(path)
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer file.Close()
+
+	
+    scanner := bufio.NewScanner(file)
+    // optionally, resize scanner's capacity for lines over 64K, see next example
+    
+	// label:=""
+	// command:=""
+	options := make([]Option, 0)
+	for scanner.Scan() {
+		line := scanner.Text()
+        // fmt.Println(line)
+	
+		i := strings.Index(line, ":")
+		label := strings.TrimSpace(line[0:i])
+		command := strings.TrimSpace(line[i+1:])
+
+		fmt.Println(label)
+		fmt.Println(command)
+		option:= Option{
+			label: label,
+			command: command,
+		}
+		options=append(options, option)
+    }
+
+    if err := scanner.Err(); err != nil {
+        log.Fatal(err)
+    }
+
+	return options
 }
