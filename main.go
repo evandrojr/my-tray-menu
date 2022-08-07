@@ -104,7 +104,6 @@ func execute(commands string) {
 }
 
 func loadConfig(path string) []Option {
-	// func LoadConfig(path string) {
 
 	file, err := os.Open(path)
 	if err != nil {
@@ -113,21 +112,13 @@ func loadConfig(path string) []Option {
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
-	// optionally, resize scanner's capacity for lines over 64K, see next example
-
-	// label:=""
-	// command:=""
 	options := make([]Option, 0)
 	for scanner.Scan() {
 		line := scanner.Text()
-		// fmt.Println(line)
-
 		i := strings.Index(line, ":")
 		label := strings.TrimSpace(line[0:i])
 		command := strings.TrimSpace(line[i+1:])
 
-		fmt.Println(label)
-		fmt.Println(command)
 		option := Option{
 			label:   label,
 			command: command,
