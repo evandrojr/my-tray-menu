@@ -19,8 +19,8 @@ var menuItensPtr []*systray.MenuItem
 var options []Option
 var programPath string
 
-type Option struct{
-	label string
+type Option struct {
+	label   string
 	command string
 }
 
@@ -35,7 +35,7 @@ func onReady() {
 	systray.SetIcon(getIcon(filepath.Join(programPath, "assets/menu.ico")))
 	menuItensPtr = make([]*systray.MenuItem, 0)
 
-	for _,v:= range options {
+	for _, v := range options {
 		menuItemPtr := systray.AddMenuItem(v.label, v.label)
 		menuItensPtr = append(menuItensPtr, menuItemPtr)
 	}
@@ -47,18 +47,20 @@ func onReady() {
 	for i, menuItenPtr := range menuItensPtr {
 		go func(c chan struct{}, cmd string) {
 			for range c {
-				execute(cmd)
+				cmdChan <- cmd
 			}
 		}(menuItenPtr.ClickedCh, options[i].command)
 	}
 
 	go func() {
-		select {
-		case cmd := <-cmdChan:
-			execute(cmd) // Handle command
-		case <-mQuit.ClickedCh:
-			systray.Quit()
-			return
+		for {
+			select {
+			case cmd := <-cmdChan:
+				execute(cmd) // Handle command
+			case <-mQuit.ClickedCh:
+				systray.Quit()
+				return
+			}
 		}
 	}()
 }
@@ -101,44 +103,41 @@ func execute(commands string) {
 	fmt.Printf("Output %s\n", out.String())
 }
 
-
-
-func loadConfig(path string) [] Option{
-// func LoadConfig(path string) {
+func loadConfig(path string) []Option {
+	// func LoadConfig(path string) {
 
 	file, err := os.Open(path)
-    if err != nil {
-        log.Fatal(err)
-    }
-    defer file.Close()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
 
-	
-    scanner := bufio.NewScanner(file)
-    // optionally, resize scanner's capacity for lines over 64K, see next example
-    
+	scanner := bufio.NewScanner(file)
+	// optionally, resize scanner's capacity for lines over 64K, see next example
+
 	// label:=""
 	// command:=""
 	options := make([]Option, 0)
 	for scanner.Scan() {
 		line := scanner.Text()
-        // fmt.Println(line)
-	
+		// fmt.Println(line)
+
 		i := strings.Index(line, ":")
 		label := strings.TrimSpace(line[0:i])
 		command := strings.TrimSpace(line[i+1:])
 
 		fmt.Println(label)
 		fmt.Println(command)
-		option:= Option{
-			label: label,
+		option := Option{
+			label:   label,
 			command: command,
 		}
-		options=append(options, option)
-    }
+		options = append(options, option)
+	}
 
-    if err := scanner.Err(); err != nil {
-        log.Fatal(err)
-    }
+	if err := scanner.Err(); err != nil {
+		log.Fatal(err)
+	}
 
 	return options
 }
