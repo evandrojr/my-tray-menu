@@ -1,0 +1,1 @@
+systray.AddSeparator() in the config
