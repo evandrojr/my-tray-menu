@@ -13,10 +13,14 @@ Sample my-tray-meny.yaml:
 ```
 Netflix: google-chrome https://netflix.com
 Prime video: google-chrome https://www.primevideo.com/
+Separator: Separator
+Punch the clock: google-chrome https://xxxxxxx.xxxxxx.xxxxxx/
+Separator: Separator
 Turn off screen: /bin/sh /home/j/lab/my-tray-menu/scripts/turn-off-screen.sh
 Toggle mic: /bin/sh /home/j/lab/my-tray-menu/scripts/toggle-microphone.sh
 Toggle speakers: pactl set-sink-mute @DEFAULT_SINK@ toggle
 Kill process: xkill
+Separator: Separator
 Shutdown: sudo shutdown -P now
 ```
 

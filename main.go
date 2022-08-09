@@ -36,6 +36,10 @@ func onReady() {
 	menuItensPtr = make([]*systray.MenuItem, 0)
 
 	for _, v := range options {
+		if(strings.ToLower(v.label)=="separator"){
+			systray.AddSeparator()
+			continue
+		}
 		menuItemPtr := systray.AddMenuItem(v.label, v.label)
 		menuItensPtr = append(menuItensPtr, menuItemPtr)
 	}
