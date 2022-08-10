@@ -16,7 +16,7 @@ import (
 )
 
 var menuItensPtr []*systray.MenuItem
-var options []Option
+var menuOptions []MenuOption
 var menuItens []MenuIten
 var programPath string
 
@@ -27,7 +27,7 @@ const (
 	Separator              = 1
 )
 
-type Option struct {
+type MenuOption struct {
 	label   string
 	command string
 }
@@ -40,7 +40,7 @@ type MenuIten struct {
 
 func main() {
 	setProgramPath()
-	options, menuItens = loadConfig(filepath.Join(programPath, "my-tray-menu-separator.yaml"))
+	menuOptions, menuItens = loadConfig(filepath.Join(programPath, "my-tray-menu.yaml"))
 	time.Sleep(1 * time.Second)
 	systray.Run(onReady, onExit)
 }
@@ -49,14 +49,14 @@ func onReady() {
 	systray.SetIcon(getIcon(filepath.Join(programPath, "assets/menu.ico")))
 	menuItensPtr = make([]*systray.MenuItem, 0)
 
-	indexOption:=0
+	indexOption := 0
 	for _, v := range menuItens {
 		if v.menuItenType == Separator {
 			systray.AddSeparator()
 			continue
 		}
 		// fmt.Printf(v.label)
-		menuItemPtr := systray.AddMenuItem(options[indexOption].label, options[indexOption].label)
+		menuItemPtr := systray.AddMenuItem(menuOptions[indexOption].label, menuOptions[indexOption].label)
 		menuItensPtr = append(menuItensPtr, menuItemPtr)
 		indexOption++
 	}
@@ -68,11 +68,11 @@ func onReady() {
 	for i, menuItenPtr := range menuItensPtr {
 		fmt.Println("menuItenPtr" + menuItenPtr.String())
 		go func(c chan struct{}, cmd string) {
-				fmt.Println(cmd)
-				for range c {
-					cmdChan <- cmd
-				}
-		}(menuItenPtr.ClickedCh, options[i].command)
+			fmt.Println(cmd)
+			for range c {
+				cmdChan <- cmd
+			}
+		}(menuItenPtr.ClickedCh, menuOptions[i].command)
 	}
 
 	go func() {
@@ -127,7 +127,7 @@ func execute(commands string) {
 	fmt.Printf("Output %s\n", out.String())
 }
 
-func loadConfig(path string) ([]Option, []MenuIten) {
+func loadConfig(path string) ([]MenuOption, []MenuIten) {
 
 	file, err := os.Open(path)
 	if err != nil {
@@ -136,7 +136,7 @@ func loadConfig(path string) ([]Option, []MenuIten) {
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
-	options := make([]Option, 0)
+	options := make([]MenuOption, 0)
 	menuItens := make([]MenuIten, 0)
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -144,7 +144,7 @@ func loadConfig(path string) ([]Option, []MenuIten) {
 		label := strings.TrimSpace(line[0:i])
 		command := strings.TrimSpace(line[i+1:])
 		var menuItenType MenuItenType = Choice
-		if strings.ToLower(label) == "separator" {
+		if strings.ToLower(label) == "[separator]" {
 			menuItenType = Separator
 		}
 
@@ -156,7 +156,7 @@ func loadConfig(path string) ([]Option, []MenuIten) {
 		menuItens = append(menuItens, menuIten)
 
 		if menuItenType == Choice {
-			option := Option{
+			option := MenuOption{
 				label:   label,
 				command: command,
 			}
