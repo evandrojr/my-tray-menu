@@ -55,14 +55,12 @@ func onReady() {
 			systray.AddSeparator()
 			continue
 		}
-		// fmt.Printf(v.label)
 		menuItemPtr := systray.AddMenuItem(menuOptions[indexOption].label, menuOptions[indexOption].label)
 		menuItensPtr = append(menuItensPtr, menuItemPtr)
 		indexOption++
 	}
 	systray.AddSeparator()
 	mQuit := systray.AddMenuItem("Quit", "Quits this app")
-
 	cmdChan := make(chan string)
 
 	for i, menuItenPtr := range menuItensPtr {
@@ -122,9 +120,10 @@ func execute(commands string) {
 	cmd.Stdout = &out
 	err := cmd.Run()
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println("Error executing command: ", err)
+		// log.Fatal(err)
 	}
-	fmt.Printf("Output %s\n", out.String())
+	fmt.Printf("Output: %s\n", out.String())
 }
 
 func loadConfig(path string) ([]MenuOption, []MenuIten) {
