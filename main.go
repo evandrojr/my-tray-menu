@@ -121,6 +121,7 @@ func execute(commands string) {
 	err := cmd.Run()
 	if err != nil {
 		fmt.Println("Error executing command: ", err)
+		// dialog.Alert("Message")
 		// log.Fatal(err)
 	}
 	fmt.Printf("Output: %s\n", out.String())
