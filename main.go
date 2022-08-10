@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"github.com/getlantern/systray"
+	"github.com/tawesoft/golib/v2/dialog"
 )
 
 var menuItensPtr []*systray.MenuItem
@@ -39,6 +40,7 @@ type MenuIten struct {
 }
 
 func main() {
+	
 	setProgramPath()
 	menuOptions, menuItens = loadConfig(filepath.Join(programPath, "my-tray-menu.yaml"))
 	time.Sleep(1 * time.Second)
@@ -120,8 +122,9 @@ func execute(commands string) {
 	cmd.Stdout = &out
 	err := cmd.Run()
 	if err != nil {
-		fmt.Println("Error executing command: ", err)
-		// dialog.Alert("Message")
+		errMsg := fmt.Sprintf("Error executing command: %s", err)
+		fmt.Println(errMsg)
+		dialog.Error(errMsg)
 		// log.Fatal(err)
 	}
 	fmt.Printf("Output: %s\n", out.String())
@@ -131,6 +134,7 @@ func loadConfig(path string) ([]MenuOption, []MenuIten) {
 
 	file, err := os.Open(path)
 	if err != nil {
+		dialog.Error("Erro loading my-tray-menu.yaml %s" ,err)
 		log.Fatal(err)
 	}
 	defer file.Close()
@@ -141,6 +145,11 @@ func loadConfig(path string) ([]MenuOption, []MenuIten) {
 	for scanner.Scan() {
 		line := scanner.Text()
 		i := strings.Index(line, ":")
+		if i == -1 {
+			errMsg := "Erro loading my-tray-menu.yaml, invalid format"
+			dialog.Error(errMsg)
+			log.Fatal(errMsg)
+		}
 		label := strings.TrimSpace(line[0:i])
 		command := strings.TrimSpace(line[i+1:])
 		var menuItenType MenuItenType = Choice
@@ -165,6 +174,7 @@ func loadConfig(path string) ([]MenuOption, []MenuIten) {
 	}
 
 	if err := scanner.Err(); err != nil {
+		dialog.Error("Erro loading my-tray-menu.yaml %s" ,err)
 		log.Fatal(err)
 	}
 

@@ -9,3 +9,4 @@ Toggle speakers: pactl set-sink-mute @DEFAULT_SINK@ toggle
 Kill process: xkill
 [Separator]: Separator
 Shutdown: sudo shutdown -P now
+nada:nada
