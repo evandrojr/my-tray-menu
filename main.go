@@ -17,16 +17,30 @@ import (
 
 var menuItensPtr []*systray.MenuItem
 var options []Option
+var menuItens []MenuIten
 var programPath string
+
+type MenuItenType int64
+
+const (
+	Choice    MenuItenType = 0
+	Separator              = 1
+)
 
 type Option struct {
 	label   string
 	command string
 }
 
+type MenuIten struct {
+	menuItenType MenuItenType
+	label        string
+	command      string
+}
+
 func main() {
 	setProgramPath()
-	options = loadConfig(filepath.Join(programPath, "my-tray-menu.yaml"))
+	options, menuItens = loadConfig(filepath.Join(programPath, "my-tray-menu-separator.yaml"))
 	time.Sleep(1 * time.Second)
 	systray.Run(onReady, onExit)
 }
@@ -35,13 +49,16 @@ func onReady() {
 	systray.SetIcon(getIcon(filepath.Join(programPath, "assets/menu.ico")))
 	menuItensPtr = make([]*systray.MenuItem, 0)
 
-	for _, v := range options {
-		if(strings.ToLower(v.label)=="separator"){
+	indexOption:=0
+	for _, v := range menuItens {
+		if v.menuItenType == Separator {
 			systray.AddSeparator()
 			continue
 		}
-		menuItemPtr := systray.AddMenuItem(v.label, v.label)
+		// fmt.Printf(v.label)
+		menuItemPtr := systray.AddMenuItem(options[indexOption].label, options[indexOption].label)
 		menuItensPtr = append(menuItensPtr, menuItemPtr)
+		indexOption++
 	}
 	systray.AddSeparator()
 	mQuit := systray.AddMenuItem("Quit", "Quits this app")
@@ -49,10 +66,12 @@ func onReady() {
 	cmdChan := make(chan string)
 
 	for i, menuItenPtr := range menuItensPtr {
+		fmt.Println("menuItenPtr" + menuItenPtr.String())
 		go func(c chan struct{}, cmd string) {
-			for range c {
-				cmdChan <- cmd
-			}
+				fmt.Println(cmd)
+				for range c {
+					cmdChan <- cmd
+				}
 		}(menuItenPtr.ClickedCh, options[i].command)
 	}
 
@@ -94,6 +113,7 @@ func setProgramPath() {
 }
 
 func execute(commands string) {
+	println(commands)
 	command_array := strings.Split(commands, " ")
 	command := ""
 	command, command_array = command_array[0], command_array[1:]
@@ -107,7 +127,7 @@ func execute(commands string) {
 	fmt.Printf("Output %s\n", out.String())
 }
 
-func loadConfig(path string) []Option {
+func loadConfig(path string) ([]Option, []MenuIten) {
 
 	file, err := os.Open(path)
 	if err != nil {
@@ -117,22 +137,36 @@ func loadConfig(path string) []Option {
 
 	scanner := bufio.NewScanner(file)
 	options := make([]Option, 0)
+	menuItens := make([]MenuIten, 0)
 	for scanner.Scan() {
 		line := scanner.Text()
 		i := strings.Index(line, ":")
 		label := strings.TrimSpace(line[0:i])
 		command := strings.TrimSpace(line[i+1:])
-
-		option := Option{
-			label:   label,
-			command: command,
+		var menuItenType MenuItenType = Choice
+		if strings.ToLower(label) == "separator" {
+			menuItenType = Separator
 		}
-		options = append(options, option)
+
+		menuIten := MenuIten{
+			label:        label,
+			command:      command,
+			menuItenType: menuItenType,
+		}
+		menuItens = append(menuItens, menuIten)
+
+		if menuItenType == Choice {
+			option := Option{
+				label:   label,
+				command: command,
+			}
+			options = append(options, option)
+		}
 	}
 
 	if err := scanner.Err(); err != nil {
 		log.Fatal(err)
 	}
 
-	return options
+	return options, menuItens
 }
