@@ -51,6 +51,11 @@ go build
 ./my-tray-menu
 ```
 
+## Known bug:
+
+1. Icon is not showing in Windows, Linux is ok, never tested in Mac;
+1. Does not accept spaces in the path like "Program files\chrome.exe";
+
 🍻
 
 ## References:

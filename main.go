@@ -40,7 +40,6 @@ type MenuIten struct {
 }
 
 func main() {
-	
 	setProgramPath()
 	menuOptions, menuItens = loadConfig(filepath.Join(programPath, "my-tray-menu.yaml"))
 	time.Sleep(1 * time.Second)
@@ -66,9 +65,7 @@ func onReady() {
 	cmdChan := make(chan string)
 
 	for i, menuItenPtr := range menuItensPtr {
-		fmt.Println("menuItenPtr" + menuItenPtr.String())
 		go func(c chan struct{}, cmd string) {
-			fmt.Println(cmd)
 			for range c {
 				cmdChan <- cmd
 			}
