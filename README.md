@@ -34,6 +34,14 @@ Follow instructions for specific OS dependencies at:
 
 https://github.com/getlantern/systray
 
+For Linux Ubuntu and Mint.
+
+Building apps requires gcc as well as the gtk3 and libayatana-appindicator3 development headers to be installed. For Debian or Ubuntu, you may install these using:
+
+```
+sudo apt-get install gcc libgtk-3-dev libayatana-appindicator3-dev
+```
+
 ## Usage
 
 ```
