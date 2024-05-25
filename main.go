@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
@@ -16,16 +15,12 @@ import (
 	"github.com/tawesoft/golib/v2/dialog"
 )
 
-var menuItensPtr []*systray.MenuItem
-var menuOptions []MenuOption
-var menuItens []MenuIten
-var programPath string
-
 type MenuItenType int64
 
+// Types of item
 const (
-	Choice    MenuItenType = 0
-	Separator              = 1
+	Choice    MenuItenType = iota
+	Separator MenuItenType = iota
 )
 
 type MenuOption struct {
@@ -39,11 +34,28 @@ type MenuIten struct {
 	command      string
 }
 
+var menuItensPtr []*systray.MenuItem
+var menuOptions []MenuOption
+var menuItens []*MenuIten
+var programPath string
+
 func main() {
+	menuItens = make([]*MenuIten, 0)
 	setProgramPath()
-	menuOptions, menuItens = loadConfig(filepath.Join(programPath, "my-tray-menu.yaml"))
+	loadConfig(filepath.Join(programPath, "my-tray-menu.yaml"))
+	parsePaths()
 	time.Sleep(1 * time.Second)
 	systray.Run(onReady, onExit)
+}
+
+func parsePaths() {
+
+	fmt.Println(menuOptions)
+	for i := range menuOptions {
+		menuOptions[i].label = "lala"
+	}
+	fmt.Println(menuOptions)
+
 }
 
 func onReady() {
@@ -51,8 +63,8 @@ func onReady() {
 	menuItensPtr = make([]*systray.MenuItem, 0)
 
 	indexOption := 0
-	for _, v := range menuItens {
-		if v.menuItenType == Separator {
+	for i := range menuItens {
+		if menuItens[i].menuItenType == Separator {
 			systray.AddSeparator()
 			continue
 		}
@@ -90,7 +102,7 @@ func onExit() {
 }
 
 func getIcon(s string) []byte {
-	b, err := ioutil.ReadFile(s)
+	b, err := os.ReadFile(s)
 	if err != nil {
 		fmt.Print(err)
 	}
@@ -103,10 +115,6 @@ func setProgramPath() {
 		panic(err)
 	}
 	programPath = filepath.Dir(ex)
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
 }
 
 func execute(commands string) {
@@ -127,18 +135,16 @@ func execute(commands string) {
 	fmt.Printf("Output: %s\n", out.String())
 }
 
-func loadConfig(path string) ([]MenuOption, []MenuIten) {
+func loadConfig(path string) {
 
 	file, err := os.Open(path)
 	if err != nil {
-		dialog.Error("Erro loading my-tray-menu.yaml %s" ,err)
+		dialog.Error("Erro loading my-tray-menu.yaml %s", err)
 		log.Fatal(err)
 	}
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
-	options := make([]MenuOption, 0)
-	menuItens := make([]MenuIten, 0)
 	for scanner.Scan() {
 		line := scanner.Text()
 		i := strings.Index(line, ":")
@@ -159,21 +165,21 @@ func loadConfig(path string) ([]MenuOption, []MenuIten) {
 			command:      command,
 			menuItenType: menuItenType,
 		}
-		menuItens = append(menuItens, menuIten)
+		menuItens = append(menuItens, &menuIten)
 
 		if menuItenType == Choice {
 			option := MenuOption{
 				label:   label,
 				command: command,
 			}
-			options = append(options, option)
+			menuOptions = append(menuOptions, option)
 		}
 	}
 
 	if err := scanner.Err(); err != nil {
-		dialog.Error("Erro loading my-tray-menu.yaml %s" ,err)
+		dialog.Error("Erro loading my-tray-menu.yaml %s", err)
 		log.Fatal(err)
 	}
 
-	return options, menuItens
+	// return options, menuItens
 }
