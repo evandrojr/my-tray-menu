@@ -4,11 +4,10 @@ Prime video: google-chrome https://www.primevideo.com/
 SQL Developer: /home/j/bin/sqldeveloper/sqldeveloper/bin/sqldeveloper
 Data Modeler: /opt/datamodeler/datamodeler.sh
 Punch the clock: google-chrome https://solucoes.corporativo.serpro/siscopweb/
-Spring Tool Suite 4: /home/j/bin/sts
 Pratico IU: /home/j/bin/praticow 
 [Separator]: Separator
-Turn off screen: /bin/sh /home/j/lab/my-tray-menu/scripts/turn-off-screen.sh
-Toggle mic: /bin/sh /home/j/lab/my-tray-menu/scripts/toggle-microphone.sh
+Turn off screen: /bin/sh {PROGRAMPATH}/scripts/turn-off-screen.sh
+Toggle mic: /bin/sh {PROGRAMPATH}/scripts/toggle-microphone.sh
 Toggle speakers: pactl set-sink-mute @DEFAULT_SINK@ toggle
 Kill process: xkill
 [Separator]: Separator

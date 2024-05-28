@@ -36,11 +36,11 @@ type MenuIten struct {
 
 var menuItensPtr []*systray.MenuItem
 var menuOptions []MenuOption
-var menuItens []*MenuIten
+var menuItens []MenuIten
 var programPath string
 
 func main() {
-	menuItens = make([]*MenuIten, 0)
+	menuItens = make([]MenuIten, 0)
 	setProgramPath()
 	loadConfig(filepath.Join(programPath, "my-tray-menu.yaml"))
 	parsePaths()
@@ -49,13 +49,9 @@ func main() {
 }
 
 func parsePaths() {
-
-	fmt.Println(menuOptions)
 	for i := range menuOptions {
-		menuOptions[i].label = "lala"
+		menuOptions[i].command = strings.ReplaceAll(menuOptions[i].command, "{PROGRAMPATH}", programPath)
 	}
-	fmt.Println(menuOptions)
-
 }
 
 func onReady() {
@@ -165,7 +161,7 @@ func loadConfig(path string) {
 			command:      command,
 			menuItenType: menuItenType,
 		}
-		menuItens = append(menuItens, &menuIten)
+		menuItens = append(menuItens, menuIten)
 
 		if menuItenType == Choice {
 			option := MenuOption{
