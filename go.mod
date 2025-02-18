@@ -1,6 +1,6 @@
 module my-tray-menu
 
-go 1.19
+go 1.24
 
 require github.com/getlantern/systray v1.2.1
 

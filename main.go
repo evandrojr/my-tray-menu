@@ -118,17 +118,20 @@ func execute(commands string) {
 	command_array := strings.Split(commands, " ")
 	command := ""
 	command, command_array = command_array[0], command_array[1:]
-	cmd := exec.Command(command, command_array...)
-	var out bytes.Buffer
-	cmd.Stdout = &out
-	err := cmd.Run()
-	if err != nil {
-		errMsg := fmt.Sprintf("Error executing command: %s", err)
-		fmt.Println(errMsg)
-		dialog.Error(errMsg)
-		// log.Fatal(err)
-	}
-	fmt.Printf("Output: %s\n", out.String())
+	// This way an app won't block the others
+	go func() {
+		cmd := exec.Command(command, command_array...)
+		var out bytes.Buffer
+		cmd.Stdout = &out
+		err := cmd.Run()
+		if err != nil {
+			errMsg := fmt.Sprintf("Error executing command: %s", err)
+			fmt.Println(errMsg)
+			dialog.Error(errMsg)
+			// log.Fatal(err)
+		}
+		fmt.Printf("Output: %s\n", out.String())
+	}()
 }
 
 func loadConfig(path string) {
